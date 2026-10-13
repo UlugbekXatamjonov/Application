@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>QALQON — Kiber tahdidlar monitori</title>
+  <meta name="description" content="Dunyo bo‘ylab kiberhujumlarni real vaqtda kuzating va tizimingizni himoya qiling.">
+  <meta name="theme-color" content="#02060f">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7z' fill='%2302060f' stroke='%233de0ff' stroke-width='2'/%3E%3Cpath d='M11 16l4 4 7-8' fill='none' stroke='%235dffc0' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="modulepreload" href="assets/vendor/three.module.min.js">
+</head>
+<body class="is-loading">
+
+  <canvas id="scene" aria-label="Kiberhujumlar aks etgan aylanuvchi Yer globusi"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <!-- yuklanish ekrani -->
+  <div class="loader" aria-hidden="true">
+    <div class="loader__ring"><span></span><span></span><span></span></div>
+    <div class="loader__txt" data-scramble>SUN'IY YO'LDOSHLAR ULANMOQDA</div>
+    <div class="loader__bar"><i></i></div>
+  </div>
+
+  <header class="top">
+    <a href="#" class="brand" data-route="home" aria-label="QALQON bosh sahifa">
+      <svg viewBox="0 0 32 32" class="brand__mark" aria-hidden="true">
+        <path d="M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7z" />
+        <path class="brand__tick" d="M11 16l4 4 7-8" />
+      </svg>
+      <span class="brand__name">QALQON</span>
+      <span class="brand__tag">/ threat&nbsp;intel</span>
+    </a>
+    <nav class="top__nav">
+      <a href="#" data-route="home" class="navlink is-active"><i class="live-dot"></i>Monitor</a>
+      <a href="#login" class="navlink">Kirish</a>
+      <a href="#register" class="btn btn--ghost btn--sm magnetic"><span>Ro‘yxatdan o‘tish</span></a>
+    </nav>
+  </header>
+
+  <!-- ===================== BOSH SAHIFA ===================== -->
+  <main class="view view--home" id="home">
+    <section class="hero">
+      <div class="chip reveal" style="--d:0">
+        <i class="live-dot"></i>
+        <span>JONLI</span>
+        <b class="mono" id="rate">— hujum/daq</b>
+      </div>
+
+      <h1 class="hero__title">
+        <span class="line reveal" style="--d:1"><span>Har soniyada</span></span>
+        <span class="line reveal" style="--d:2"><span>dunyo <em class="glitch" data-text="hujum">hujum</em></span></span>
+        <span class="line reveal" style="--d:3"><span>ostida qoladi.</span></span>
+      </h1>
+
+      <p class="hero__lead reveal" style="--d:4">
+        QALQON 128 mintaqadagi sensorlardan kelayotgan tahdidlarni real vaqtda tahlil qiladi
+        va tarmog‘ingizga yetib kelmasidan oldin to‘xtatadi.
+      </p>
+
+      <div class="hero__cta reveal" style="--d:5">
+        <a href="#register" class="btn btn--primary magnetic">
+          <span>Himoyani boshlash</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="#login" class="btn btn--ghost magnetic"><span>Hisobga kirish</span></a>
+      </div>
+
+      <dl class="stats reveal" style="--d:6">
+        <div><dt>Bugun aniqlangan</dt><dd class="mono" id="statToday">0</dd></div>
+        <div><dt>Bloklandi</dt><dd class="mono"><span id="statBlocked">99.2</span>%</dd></div>
+        <div><dt>Faol tugunlar</dt><dd class="mono" id="statNodes">128</dd></div>
+      </dl>
+    </section>
+
+    <!-- monitor panellari -->
+    <aside class="hud hud--feed panel reveal" style="--d:5" aria-label="Hujumlar oqimi">
+      <header class="panel__head">
+        <span class="mono">// HUJUMLAR OQIMI</span>
+        <span class="mono panel__clock" id="clock">00:00:00</span>
+      </header>
+      <ol class="feed" id="feed"></ol>
+    </aside>
+
+    <aside class="hud hud--targets panel reveal" style="--d:6" aria-label="Eng ko‘p nishonga olinganlar">
+      <header class="panel__head"><span class="mono">// TOP NISHONLAR</span><span class="mono dim">24 soat</span></header>
+      <ul class="bars" id="bars"></ul>
+      <ul class="legend" id="legend"></ul>
+    </aside>
+
+    <div class="hint mono reveal" style="--d:7">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12m0-1.5v-2a1.5 1.5 0 0 1 3 0V12m0-1v-.5a1.5 1.5 0 0 1 3 0V13m0-1a1.5 1.5 0 0 1 3 0v3a6 6 0 0 1-6 6h-1.2a6 6 0 0 1-4.6-2.2L5 15.5a1.5 1.5 0 0 1 2.3-1.9L8 14.5"/></svg>
+      globusni sudrab aylantiring
+    </div>
+
+    <!-- zarba yorlig'i -->
+    <div class="impact-tag mono" id="impactTag"></div>
+  </main>
+
+  <!-- ===================== AUTH ===================== -->
+  <section class="view view--auth" id="auth" aria-label="Kirish va ro‘yxatdan o‘tish">
+    <div class="auth" id="authCard" data-mode="register">
+      <i class="auth__scan" aria-hidden="true"></i>
+      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+
+      <!-- mobil uchun tablar -->
+      <div class="auth__tabs" role="tablist">
+        <button type="button" role="tab" data-switch="login">Kirish</button>
+        <button type="button" role="tab" data-switch="register">Ro‘yxatdan o‘tish</button>
+        <i class="auth__tabs-ind"></i>
+      </div>
+
+      <!-- KIRISH -->
+      <form class="pane pane--login" id="loginForm" novalidate autocomplete="on">
+        <div class="pane__inner">
+          <p class="eyebrow mono">// 01 — AUTENTIFIKATSIYA</p>
+          <h2 class="pane__title" data-scramble>Qaytganingiz bilan</h2>
+          <p class="pane__sub">Monitoringiz sizni kutmoqda.</p>
+
+          <div class="social">
+            <button type="button" class="social__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#EA4335" d="M12 10.2v3.9h5.5c-.2 1.3-1.6 3.8-5.5 3.8-3.3 0-6-2.7-6-6.1s2.7-6.1 6-6.1c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.2 14.6 2.2 12 2.2 6.6 2.2 2.2 6.6 2.2 12s4.4 9.8 9.8 9.8c5.7 0 9.4-4 9.4-9.6 0-.6-.1-1.1-.2-1.6H12z"/></svg>Google</button>
+            <button type="button" class="social__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg>GitHub</button>
+          </div>
+          <div class="divider mono"><span>yoki email orqali</span></div>
+
+          <label class="field">
+            <input type="email" name="email" required placeholder=" " autocomplete="email">
+            <span class="field__label">Email manzil</span>
+            <i class="field__line"></i>
+            <small class="field__err"></small>
+          </label>
+          <label class="field">
+            <input type="password" name="password" required minlength="8" placeholder=" " autocomplete="current-password">
+            <span class="field__label">Parol</span>
+            <button type="button" class="field__eye" aria-label="Parolni ko‘rsatish"><svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            <i class="field__line"></i>
+            <small class="field__err"></small>
+          </label>
+
+          <div class="row">
+            <label class="check"><input type="checkbox" checked><i></i>Eslab qolish</label>
+            <a href="#login" class="link">Parolni unutdingizmi?</a>
+          </div>
+
+          <button class="btn btn--primary btn--block submit" type="submit">
+            <span class="submit__txt">Tizimga kirish</span>
+            <span class="submit__spin" aria-hidden="true"></span>
+          </button>
+        </div>
+      </form>
+
+      <!-- RO'YXATDAN O'TISH -->
+      <form class="pane pane--register" id="registerForm" novalidate autocomplete="on">
+        <div class="pane__inner">
+          <p class="eyebrow mono">// 02 — YANGI TUGUN</p>
+          <h2 class="pane__title" data-scramble>Qalqonga qo‘shiling</h2>
+          <p class="pane__sub">60 soniyada tarmog‘ingizni himoyaga oling.</p>
+
+          <label class="field">
+            <input type="text" name="name" required placeholder=" " autocomplete="name">
+            <span class="field__label">To‘liq ism</span>
+            <i class="field__line"></i>
+            <small class="field__err"></small>
+          </label>
+          <label class="field">
+            <input type="email" name="email" required placeholder=" " autocomplete="email">
+            <span class="field__label">Email manzil</span>
+            <i class="field__line"></i>
+            <small class="field__err"></small>
+          </label>
+          <label class="field">
+            <input type="password" name="password" required minlength="8" placeholder=" " autocomplete="new-password">
+            <span class="field__label">Parol</span>
+            <button type="button" class="field__eye" aria-label="Parolni ko‘rsatish"><svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            <i class="field__line"></i>
+            <small class="field__err"></small>
+          </label>
+          <div class="strength" id="strength" data-score="0">
+            <i></i><i></i><i></i><i></i>
+            <span class="mono strength__lbl">Parol kuchi: —</span>
+          </div>
+
+          <label class="check check--terms"><input type="checkbox" name="terms"><i></i><span>Men <a href="#register" class="link">foydalanish shartlari</a>ga roziman</span></label>
+
+          <button class="btn btn--primary btn--block submit" type="submit">
+            <span class="submit__txt">Hisob yaratish</span>
+            <span class="submit__spin" aria-hidden="true"></span>
+          </button>
+        </div>
+      </form>
+
+      <!-- sirpanuvchi panel -->
+      <div class="slider" aria-hidden="true">
+        <div class="slider__track">
+          <div class="slider__side slider__side--toLogin">
+            <div class="radar"><i></i><i></i><i></i><b></b></div>
+            <h3>Hisobingiz bormi?</h3>
+            <p>Monitor paneliga qayting va hujumlarni kuzatishda davom eting.</p>
+            <button type="button" class="btn btn--glass" data-switch="login" tabindex="-1">Kirish</button>
+          </div>
+          <div class="slider__side slider__side--toRegister">
+            <div class="radar"><i></i><i></i><i></i><b></b></div>
+            <h3>Yangi bu yerdami?</h3>
+            <p>Bepul hisob oching — birinchi tugun 14 kun davomida bepul himoyada.</p>
+            <button type="button" class="btn btn--glass" data-switch="register" tabindex="-1">Ro‘yxatdan o‘tish</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- muvaffaqiyat ekrani -->
+      <div class="done" id="done" aria-live="polite">
+        <div class="done__orb">
+          <svg viewBox="0 0 120 120">
+            <circle class="o1" cx="60" cy="60" r="54"/>
+            <circle class="o2" cx="60" cy="60" r="44"/>
+            <circle class="o3" cx="60" cy="60" r="34"/>
+            <path class="tick" d="M42 61l12 12 25-27"/>
+          </svg>
+        </div>
+        <ol class="term mono" id="term"></ol>
+        <h2 class="done__title" id="doneTitle"></h2>
+        <p class="done__sub" id="doneSub"></p>
+        <a href="#" data-route="home" class="btn btn--primary done__btn magnetic"><span>Monitorni ochish</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="ticker mono" aria-label="Tahdidlar yangiliklari">
+    <span class="ticker__label">INTEL</span>
+    <div class="ticker__viewport"><div class="ticker__track" id="ticker"></div></div>
+  </footer>
+
+  <script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
