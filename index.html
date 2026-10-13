@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>CRYSEC — Kiberxavfsizlik o‘quv markazi</title>
+  <meta name="description" content="CRYSEC — amaliyotga yo‘naltirilgan kiberxavfsizlik o‘quv markazi: pentest, SOC, bug hunting, reverse engineering va yana 12 yo‘nalish. Kursga onlayn yoziling.">
+  <meta name="theme-color" content="#02060f">
+  <meta property="og:title" content="CRYSEC — Kiberxavfsizlik o‘quv markazi">
+  <meta property="og:description" content="Hujumni tushun. Himoyani qur. 16 yo‘nalish, real laboratoriyalar, xalqaro sertifikatli mentor.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7z' fill='%2302060f' stroke='%233de0ff' stroke-width='2'/%3E%3Cpath d='M11 16l4 4 7-8' fill='none' stroke='%235dffc0' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="modulepreload" href="assets/vendor/three.module.min.js">
+</head>
+<body class="is-loading">
+
+  <!-- ikonkalar to'plami -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/></symbol>
+      <symbol id="i-term" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="2.5"/><path d="m7 9 3 3-3 3M13 15h4"/></symbol>
+      <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l2 2M15 8l2 2"/></symbol>
+      <symbol id="i-mask" viewBox="0 0 24 24"><path d="M3 7c3-2 15-2 18 0 0 6-3 10-6 10-1.5 0-2-2-3-2s-1.5 2-3 2c-3 0-6-4-6-10z"/><path d="M7 10.5c1-.7 2.3-.7 3 0M14 10.5c.7-.7 2-.7 3 0"/></symbol>
+      <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></symbol>
+      <symbol id="i-net" viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="5" rx="1"/><rect x="2.5" y="16.5" width="6" height="5" rx="1"/><rect x="15.5" y="16.5" width="6" height="5" rx="1"/><path d="M12 7.5V12M5.5 16.5V12h13v4.5"/></symbol>
+      <symbol id="i-bug" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="13" rx="5"/><path d="M12 11v9M7 12H3M21 12h-4M7 17l-3 2M17 17l3 2M7 8 4 6M17 8l3-2M9 7a3 3 0 0 1 6 0"/></symbol>
+      <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/><path d="M9.5 9.5 12 12l2.5-2.5"/></symbol>
+      <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 22V3M5 4h12l-2 4 2 4H5"/></symbol>
+      <symbol id="i-radar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12 18 6"/><circle cx="16" cy="9" r="1"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5M8 10.5h5M10.5 8v5"/></symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></symbol>
+      <symbol id="i-virus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5M4.9 4.9l3.5 3.5M15.6 15.6l3.5 3.5M4.9 19.1l3.5-3.5M15.6 8.4l3.5-3.5"/></symbol>
+      <symbol id="i-chip" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4M10 10h4v4h-4z"/></symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+      <symbol id="i-tg" viewBox="0 0 24 24"><path d="m21.5 3.5-19 7.3c-.9.4-.9 1.6.1 1.9l4.7 1.5 1.8 5.6c.3.8 1.2 1 1.8.4l2.6-2.4 4.8 3.5c.7.5 1.6.1 1.8-.7l3.2-15.6c.2-1-.8-1.8-1.8-1.5z"/><path d="m7.3 14.2 10.2-6.4-7.7 7.6"/></symbol>
+      <symbol id="i-call" viewBox="0 0 24 24"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    </defs>
+  </svg>
+
+  <canvas id="scene" aria-label="Kiberhujumlar aks etgan aylanuvchi Yer globusi"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="progress" aria-hidden="true"><i id="progress"></i></div>
+
+  <div class="loader" aria-hidden="true">
+    <div class="loader__ring"><span></span><span></span><span></span></div>
+    <div class="loader__txt">CRYSEC LAB ISHGA TUSHMOQDA</div>
+    <div class="loader__bar"><i></i></div>
+  </div>
+
+  <header class="top">
+    <a href="#top" class="brand" aria-label="CRYSEC bosh sahifa">
+      <svg viewBox="0 0 32 32" class="brand__mark" aria-hidden="true">
+        <path d="M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7z" />
+        <path class="brand__tick" d="M11 16l4 4 7-8" />
+      </svg>
+      <span class="brand__name">CRYSEC</span>
+      <span class="brand__tag">/ cyber&nbsp;academy</span>
+    </a>
+    <nav class="top__nav" aria-label="Asosiy menyu">
+      <a href="#about" class="navlink" data-nav="about">Markaz</a>
+      <a href="#courses" class="navlink" data-nav="courses">Kurslar</a>
+      <a href="#roadmap" class="navlink" data-nav="roadmap">O‘quv yo‘li</a>
+      <a href="#mentor" class="navlink" data-nav="mentor">Mentor</a>
+      <a href="login.html" class="navlink navlink--login"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>Kirish</a>
+      <a href="#register" class="btn btn--primary btn--sm magnetic"><span>Kursga yozilish</span></a>
+    </nav>
+  </header>
+
+  <!-- yon tomondagi bo'lim ko'rsatkichi -->
+  <nav class="dots" aria-label="Bo‘limlar">
+    <a href="#top" data-dot="top"><span>Bosh</span></a>
+    <a href="#about" data-dot="about"><span>Markaz</span></a>
+    <a href="#courses" data-dot="courses"><span>Kurslar</span></a>
+    <a href="#roadmap" data-dot="roadmap"><span>O‘quv yo‘li</span></a>
+    <a href="#mentor" data-dot="mentor"><span>Mentor</span></a>
+    <a href="#register" data-dot="register"><span>Yozilish</span></a>
+  </nav>
+
+  <main>
+    <!-- ===================== 00 HERO ===================== -->
+    <section class="sec hero" id="top" data-globe="hero">
+      <div class="hero__body">
+        <div class="chip reveal" style="--d:0">
+          <i class="live-dot"></i><span>JONLI XARITA</span><b class="mono" id="rate">— hujum/daq</b>
+        </div>
+        <h1 class="hero__title">
+          <span class="line reveal" style="--d:1"><span><em class="glitch" data-text="Hujumni">Hujumni</em> tushun.</span></span>
+          <span class="line reveal" style="--d:2"><span>Himoyani <span class="grad">qur.</span></span></span>
+        </h1>
+        <p class="hero__lead reveal" style="--d:3">
+          <b>CRYSEC</b> — amaliyotga yo‘naltirilgan kiberxavfsizlik o‘quv markazi.
+          Pentest, SOC, bug hunting, reverse engineering va yana 12 yo‘nalishni real laboratoriyalarda
+          noldan professional darajagacha o‘rganing.
+        </p>
+        <div class="hero__cta reveal" style="--d:4">
+          <a href="#register" class="btn btn--primary magnetic"><span>Kursga yozilish</span><svg><use href="#i-arrow"/></svg></a>
+          <a href="#courses" class="btn btn--ghost magnetic"><span>Kurslarni ko‘rish</span></a>
+        </div>
+        <dl class="stats reveal" style="--d:5">
+          <div><dt>Yo‘nalishlar</dt><dd class="mono" data-count="16">0</dd></div>
+          <div><dt>Mentor sertifikatlari</dt><dd class="mono"><span data-count="3">0</span> xalqaro</dd></div>
+          <div><dt>Format</dt><dd class="mono">Lab + CTF</dd></div>
+        </dl>
+      </div>
+
+      <aside class="hud panel reveal" style="--d:5" aria-label="Hujumlar oqimi">
+        <header class="panel__head">
+          <span class="mono">// HUJUMLAR OQIMI</span>
+          <span class="mono panel__clock" id="clock">00:00:00</span>
+        </header>
+        <ol class="feed" id="feed"></ol>
+        <ul class="legend" id="legend"></ul>
+      </aside>
+
+      <a href="#about" class="scroll-cue mono" aria-label="Pastga">
+        <span>scroll</span><i></i>
+      </a>
+      <div class="impact-tag mono" id="impactTag"></div>
+    </section>
+
+    <!-- yuguruvchi lenta -->
+    <div class="band" aria-hidden="true">
+      <div class="band__row"><div class="band__track" id="band1"></div></div>
+      <div class="band__row band__row--rev"><div class="band__track" id="band2"></div></div>
+    </div>
+
+    <!-- ===================== 01 MARKAZ ===================== -->
+    <section class="sec about" id="about" data-globe="about">
+      <div class="wrap about__grid">
+        <div class="about__head">
+          <p class="eyebrow mono z3">// 01 — CRYSEC NIMA?</p>
+          <h2 class="h2 z3" data-split>Nazariya emas — haqiqiy hujum va haqiqiy himoya.</h2>
+          <p class="lead z3">Har bir mavzu laboratoriyada mustahkamlanadi: avval zaif tizimni o‘zingiz buzasiz,
+            keyin uni qanday himoya qilishni o‘rganasiz. Shu tariqa bilim emas, <b>ko‘nikma</b> shakllanadi.</p>
+        </div>
+        <div class="feat">
+          <article class="card feat__item z3" style="--d:0">
+            <span class="feat__ic"><svg><use href="#i-term"/></svg></span>
+            <h3>Amaliy laboratoriyalar</h3>
+            <p>Har darsda real zaif mashinalar. Siz buzasiz — mentor tushuntiradi — keyin birga yopamiz.</p>
+          </article>
+          <article class="card feat__item z3" style="--d:1">
+            <span class="feat__ic"><svg><use href="#i-flag"/></svg></span>
+            <h3>CTF musobaqalari</h3>
+            <p>Muntazam CTF topshiriqlari va jamoaviy bellashuvlar — o‘rganganingizni tezlikda sinang.</p>
+          </article>
+          <article class="card feat__item z3" style="--d:2">
+            <span class="feat__ic"><svg><use href="#i-shield"/></svg></span>
+            <h3>Sertifikatga tayyorgarlik</h3>
+            <p>eJPT, CPTS, CJCA imtihonlarini topshirgan mentordan — imtihon formatidagi mashqlar.</p>
+          </article>
+          <article class="card feat__item z3" style="--d:3">
+            <span class="feat__ic"><svg><use href="#i-key"/></svg></span>
+            <h3>Axloqiy yondashuv</h3>
+            <p>Faqat qonuniy, ruxsat etilgan muhitda ishlaymiz. Mas’uliyatli xakerlik — bizning madaniyat.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 02 KURSLAR ===================== -->
+    <section class="sec courses" id="courses" data-globe="courses">
+      <div class="wrap">
+        <div class="sec__head">
+          <p class="eyebrow mono z3">// 02 — KURSLAR</p>
+          <h2 class="h2 z3" data-split>16 yo‘nalish. Bitta maqsad — himoya.</h2>
+          <div class="filters z3" id="filters" role="tablist" aria-label="Kurs toifalari"></div>
+        </div>
+        <div class="grid" id="courseGrid"></div>
+      </div>
+    </section>
+
+    <!-- ===================== 03 O'QUV YO'LI ===================== -->
+    <section class="sec roadmap" id="roadmap" data-globe="roadmap">
+      <div class="wrap">
+        <div class="sec__head">
+          <p class="eyebrow mono z3">// 03 — O‘QUV YO‘LI</p>
+          <h2 class="h2 z3" data-split>Noldan — professionalgacha. Qadam-baqadam.</h2>
+        </div>
+        <div class="road" id="road">
+          <svg class="road__line" aria-hidden="true" preserveAspectRatio="none"><path id="roadPath"/><path id="roadPathLit"/></svg>
+          <ol class="road__list">
+            <li class="stage" style="--c:#3de0ff">
+              <span class="stage__node"><b>01</b></span>
+              <div class="stage__card card">
+                <p class="mono stage__tag">POYDEVOR</p>
+                <h3>Kompyuter qanday ishlashini chuqur tushunish</h3>
+                <p>Linux, tarmoqlar, kiberxavfsizlik asoslari va kriptografiya. Hech qanday tajriba talab qilinmaydi.</p>
+                <ul class="pills"><li>Linux</li><li>Kiberxavfsizlik</li><li>Kriptografiya</li></ul>
+              </div>
+            </li>
+            <li class="stage" style="--c:#ff3d6e">
+              <span class="stage__node"><b>02</b></span>
+              <div class="stage__card card">
+                <p class="mono stage__tag">HUJUM SAN’ATI</p>
+                <h3>Hujumchi kabi fikrlashni o‘rganish</h3>
+                <p>Axloqiy xakerlik, web va tarmoq pentesti, har hafta CTF. Birinchi “root” — shu bosqichda.</p>
+                <ul class="pills"><li>Axloqiy xakerlik</li><li>Pentesting</li><li>Network pentest</li><li>CTF</li></ul>
+              </div>
+            </li>
+            <li class="stage" style="--c:#b48cff">
+              <span class="stage__node"><b>03</b></span>
+              <div class="stage__card card">
+                <p class="mono stage__tag">IXTISOSLIK</p>
+                <h3>O‘z yo‘nalishingizni tanlash</h3>
+                <p>Red team: bug hunting, mobile, reverse, virusologiya. Blue team: SOC, kriminalistika, risk. Razvedka: OSINT va cyber intelligence.</p>
+                <ul class="pills"><li>Bug hunting</li><li>Reverse</li><li>SOC</li><li>OSINT</li><li>…</li></ul>
+              </div>
+            </li>
+            <li class="stage" style="--c:#5dffc0">
+              <span class="stage__node"><b>04</b></span>
+              <div class="stage__card card">
+                <p class="mono stage__tag">PROFESSIONAL</p>
+                <h3>Sertifikat, portfolio va birinchi ish</h3>
+                <p>Xalqaro imtihonlarga tayyorgarlik, CTF reytingi, bug bounty hisobotlari — ish beruvchiga ko‘rsatadigan dalillar.</p>
+                <ul class="pills"><li>eJPT</li><li>CPTS</li><li>CJCA</li><li>Portfolio</li></ul>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 04 MENTOR ===================== -->
+    <section class="sec mentor" id="mentor" data-globe="mentor">
+      <div class="wrap mentor__grid">
+        <div class="mentor__left">
+          <figure class="profile card tilt no-drag z3" id="profile">
+            <div class="profile__bg" aria-hidden="true">
+              <i class="profile__aurora"></i>
+              <i class="profile__ring r1"></i><i class="profile__ring r2"></i><i class="profile__ring r3"></i>
+              <i class="profile__grid"></i>
+              <i class="profile__scan"></i>
+            </div>
+            <div class="profile__mono" aria-hidden="true">DK</div>
+            <img class="profile__img" src="assets/mentor/dovudbek.png" alt="Dovudbek Khusanov" onerror="this.remove()">
+            <span class="profile__chip c1 mono">CPTS</span>
+            <span class="profile__chip c2 mono">eJPT</span>
+            <span class="profile__chip c3 mono">CJCA</span>
+            <figcaption class="profile__plate">
+              <b>Dovudbek Khusanov</b>
+              <span class="mono">Asoschi · Bosh mentor</span>
+            </figcaption>
+          </figure>
+          <div class="terminal card z3" aria-hidden="true">
+            <div class="terminal__bar"><i></i><i></i><i></i><span class="mono">dovudbek@crysec:~</span></div>
+            <pre class="mono" id="term"></pre>
+          </div>
+        </div>
+        <div class="mentor__right">
+          <p class="eyebrow mono z3">// 04 — MENTOR</p>
+          <h2 class="h2 z3" data-split>Sizni xalqaro sertifikatli mutaxassis o‘qitadi.</h2>
+          <p class="lead z3"><b>Dovudbek Khusanov</b> — CRYSEC asoschisi va bosh mentori. Uning sertifikatlari test emas,
+            soatlab davom etadigan <b>amaliy</b> imtihonlar. Ularni topshirish uchun nima kerakligini o‘z tajribasidan biladi
+            va sizga ham shu yo‘lni o‘rgatadi.</p>
+          <div class="certs" id="certs"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 05 YOZILISH ===================== -->
+    <section class="sec register" id="register" data-globe="register">
+      <div class="wrap register__grid">
+        <div class="register__copy">
+          <p class="eyebrow mono z3">// 05 — YOZILISH</p>
+          <h2 class="h2 z3" data-split>Birinchi qadamni bugun qo‘ying.</h2>
+          <p class="lead z3">Arizani to‘ldiring — administrator siz bilan bog‘lanib, darajangizga mos guruh va jadvalni tanlab beradi.</p>
+        </div>
+
+        <div class="enroll card no-drag" id="enroll">
+          <i class="enroll__scan" aria-hidden="true"></i>
+          <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+
+          <div class="enroll__steps mono" aria-hidden="true">
+            <span class="is-on">01 · Siz haqingizda</span><i><b></b></i><span>02 · Kurs</span>
+          </div>
+
+          <form id="enrollForm" novalidate autocomplete="on">
+            <div class="cube">
+              <fieldset class="face is-on" data-step="1">
+                <legend class="enroll__title" data-scramble>Tanishaylik</legend>
+                <p class="enroll__sub">Bu ma’lumotlar faqat siz bilan bog‘lanish uchun.</p>
+                <label class="field">
+                  <input type="text" name="name" required placeholder=" " autocomplete="name">
+                  <span class="field__label">Ism va familiya</span><i class="field__line"></i><small class="field__err"></small>
+                </label>
+                <label class="field">
+                  <input type="tel" name="phone" required placeholder=" " autocomplete="tel" inputmode="tel">
+                  <span class="field__label">Telefon raqam</span><i class="field__line"></i><small class="field__err"></small>
+                </label>
+                <label class="field">
+                  <input type="text" name="telegram" placeholder=" " autocomplete="off">
+                  <span class="field__label">Telegram @username (ixtiyoriy)</span><i class="field__line"></i><small class="field__err"></small>
+                </label>
+                <button class="btn btn--primary btn--block" type="button" data-next><span>Davom etish</span><svg><use href="#i-arrow"/></svg></button>
+              </fieldset>
+
+              <fieldset class="face" data-step="2">
+                <legend class="enroll__title" data-scramble>Yo‘nalishingiz</legend>
+                <p class="enroll__sub">Bilmasangiz — “Kiberxavfsizlik”ni tanlang, qolganini birga hal qilamiz.</p>
+                <div class="select field" id="courseSelect">
+                  <button type="button" class="select__btn" aria-haspopup="listbox" aria-expanded="false">
+                    <span class="select__val">Kursni tanlang</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                  <span class="field__label">Kurs</span>
+                  <ul class="select__list" role="listbox"></ul>
+                  <input type="hidden" name="course">
+                  <small class="field__err"></small>
+                </div>
+                <p class="group__lbl mono">Darajangiz</p>
+                <div class="seg" data-name="level">
+                  <label><input type="radio" name="level" value="Boshlang‘ich" checked><span>Noldan</span></label>
+                  <label><input type="radio" name="level" value="O‘rta"><span>Biroz bilaman</span></label>
+                  <label><input type="radio" name="level" value="Tajribali"><span>Tajribaliman</span></label>
+                </div>
+                <p class="group__lbl mono">Qulay vaqt</p>
+                <div class="seg" data-name="time">
+                  <label><input type="radio" name="time" value="Ertalab" ><span>Ertalab</span></label>
+                  <label><input type="radio" name="time" value="Tushdan keyin" checked><span>Kunduzi</span></label>
+                  <label><input type="radio" name="time" value="Kechqurun"><span>Kechqurun</span></label>
+                </div>
+                <div class="enroll__actions">
+                  <button class="btn btn--ghost btn--icon" type="button" data-prev aria-label="Orqaga"><svg style="transform:scaleX(-1)"><use href="#i-arrow"/></svg></button>
+                  <button class="btn btn--primary submit" type="submit">
+                    <span class="submit__txt">Ariza yuborish</span><span class="submit__spin" aria-hidden="true"></span>
+                  </button>
+                </div>
+              </fieldset>
+            </div>
+          </form>
+
+          <div class="done" id="done" aria-live="polite">
+            <div class="done__orb">
+              <svg viewBox="0 0 120 120">
+                <circle class="o1" cx="60" cy="60" r="54"/><circle class="o2" cx="60" cy="60" r="44"/><circle class="o3" cx="60" cy="60" r="34"/>
+                <path class="tick" d="M42 61l12 12 25-27"/>
+              </svg>
+            </div>
+            <ol class="term-log mono" id="termLog"></ol>
+            <h3 class="done__title" id="doneTitle"></h3>
+            <p class="done__sub" id="doneSub"></p>
+            <button type="button" class="btn btn--ghost done__btn" id="doneAgain"><span>Yana ariza</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__row">
+      <div>
+        <a href="#top" class="brand"><svg viewBox="0 0 32 32" class="brand__mark" aria-hidden="true"><path d="M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7z"/><path class="brand__tick" d="M11 16l4 4 7-8"/></svg><span class="brand__name">CRYSEC</span></a>
+        <p class="foot__txt">Kiberxavfsizlik o‘quv markazi. Hujumni tushun — himoyani qur.</p>
+        <a href="login.html" class="link foot__login">Talabalar kabinetiga kirish →</a>
+      </div>
+      <ul class="contacts contacts--foot" id="contactsFoot"></ul>
+    </div>
+    <div class="foot__giant" aria-hidden="true">CRYSEC</div>
+    <p class="foot__copy mono">© <span id="year"></span> CRYSEC · Barcha mashg‘ulotlar faqat qonuniy va ruxsat etilgan muhitda o‘tkaziladi.</p>
+  </footer>
+
+  <script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
