@@ -62,5 +62,57 @@ export const TICKER = [
   'Markaziy Osiyo bank sektoriga fishing to‘lqini: +312% haftalik',
   'Ransomware guruhi LockSpire infratuzilmasi bloklandi',
   'DNS amplification hujumlari 1.8 Tbit/s cho‘qqisiga yetdi',
-  'Qalqon tugunlari: 128 ta mintaqada faol, kechikish 11 ms',
+  'CRYSEC CTF: yangi haftalik topshiriqlar e’lon qilindi',
+];
+
+/* =========================================================
+   CRYSEC — markaz ma'lumotlari. Kontaktlarni shu yerda o'zgartiring.
+   ========================================================= */
+export const CONFIG = {
+  brand: 'CRYSEC',
+  telegram: '@crysec_uz',            // TODO: haqiqiy Telegram kanal/admin
+  telegramUrl: 'https://t.me/crysec_uz',
+  phone: '+998 (__) ___-__-__',      // TODO: telefon raqam
+  address: 'Manzil kiritilmagan',    // TODO: markaz manzili
+  landmark: '',                      // TODO: mo'ljal
+  enrollEndpoint: '/api/enroll',
+  // Talabalar kabineti API si. Bo'sh bo'lsa — login sahifasi namoyish rejimida ishlaydi.
+  loginEndpoint: '',
+  loginRedirect: '',   // Vercel funksiyasi -> Telegram bot (api/enroll.js)
+};
+
+export const CATEGORIES = [
+  { id: 'all', label: 'Barchasi' },
+  { id: 'base', label: 'Poydevor' },
+  { id: 'red', label: 'Hujum · Red team' },
+  { id: 'blue', label: 'Himoya · Blue team' },
+  { id: 'research', label: 'Tadqiqot' },
+];
+
+export const COURSES = [
+  { id: 'cyber', cat: 'base', title: 'Kiberxavfsizlik', desc: 'Tahdidlar, zaifliklar, himoya qatlamlari — butun sohaning xaritasi.', lvl: 1, icon: 'shield' },
+  { id: 'linux', cat: 'base', title: 'Linux administratorligi', desc: 'Terminal, foydalanuvchilar, xizmatlar va server xavfsizligi.', lvl: 1, icon: 'term' },
+  { id: 'crypto', cat: 'base', title: 'Kriptografiya', desc: 'Shifrlash, xesh, PKI va ularni buzish usullari amalda.', lvl: 2, icon: 'key' },
+  { id: 'ethical', cat: 'red', title: 'Axloqiy xakerlik', desc: 'Hujumchi kabi fikrlash: razvedkadan eksploitgacha.', lvl: 1, icon: 'mask' },
+  { id: 'pentest', cat: 'red', title: 'Pentesting', desc: 'Web-ilovalarni to‘liq sinovdan o‘tkazish va hisobot yozish.', lvl: 2, icon: 'target' },
+  { id: 'netpentest', cat: 'red', title: 'Network pentesting', desc: 'Active Directory, ichki tarmoq, pivoting va lateral harakat.', lvl: 3, icon: 'net' },
+  { id: 'bug', cat: 'red', title: 'Bug hunting', desc: 'Bug bounty platformalarida real zaifliklarni topib, mukofot olish.', lvl: 2, icon: 'bug' },
+  { id: 'mobile', cat: 'red', title: 'Mobile app security', desc: 'Android/iOS ilovalarni tahlil qilish va buzish.', lvl: 3, icon: 'phone' },
+  { id: 'ctf', cat: 'red', title: 'CTF laboratoriyalar', desc: 'Haftalik musobaqalar: web, pwn, crypto, forensics topshiriqlari.', lvl: 1, icon: 'flag' },
+  { id: 'soc', cat: 'blue', title: 'SOC Analyst', desc: 'SIEM, loglar, hodisalarga javob — himoya markazi ichida ishlash.', lvl: 2, icon: 'radar' },
+  { id: 'forensics', cat: 'blue', title: 'Kiberkriminalistika', desc: 'Raqamli dalillarni yig‘ish, xotira va disk tahlili.', lvl: 3, icon: 'search' },
+  { id: 'risk', cat: 'blue', title: 'Risk management', desc: 'Xavflarni baholash, siyosatlar va standartlar (ISO 27001).', lvl: 2, icon: 'chart' },
+  { id: 'malware', cat: 'research', title: 'Virusologiya', desc: 'Zararli dasturlarni xavfsiz muhitda ochib, xatti-harakatini o‘rganish.', lvl: 3, icon: 'virus' },
+  { id: 'reverse', cat: 'research', title: 'Reverse engineering', desc: 'Assembler, debugger va dizassembler bilan binar fayllarni tahlil qilish.', lvl: 3, icon: 'chip' },
+  { id: 'osint', cat: 'research', title: 'OSINT', desc: 'Ochiq manbalardan razvedka: odamlar, domenlar, infratuzilma.', lvl: 1, icon: 'eye' },
+  { id: 'intel', cat: 'research', title: 'Cyber intelligence', desc: 'Tahdid razvedkasi: APT guruhlar, IOC va hujum kampaniyalari.', lvl: 2, icon: 'globe' },
+];
+
+export const CERTS = [
+  { id: 'cpts', code: 'CPTS', name: 'Certified Penetration Testing Specialist', issuer: 'Hack The Box',
+    desc: 'Eng og‘ir amaliy pentest imtihonlaridan biri: 10 kunlik real tarmoqni buzish va professional hisobot.', img: 'assets/certs/cpts.jpg', hue: '#9fef00' },
+  { id: 'ejpt', code: 'eJPT', name: 'eLearnSecurity Junior Penetration Tester', issuer: 'INE Security',
+    desc: 'Pentest asoslari bo‘yicha amaliy imtihon: razvedka, ekspluatatsiya va pivoting.', img: 'assets/certs/ejpt.jpg', hue: '#ff6a3d' },
+  { id: 'cjca', code: 'CJCA', name: 'Certified Junior Cybersecurity Associate', issuer: 'Hack The Box',
+    desc: 'Kiberxavfsizlikning hujum va himoya tomonlarini qamrab olgan boshlang‘ich amaliy sertifikat.', img: 'assets/certs/cjca.jpg', hue: '#3de0ff' },
 ];

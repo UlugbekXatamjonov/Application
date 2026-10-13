@@ -328,7 +328,7 @@ export class ThreatScene {
     this.clock = new THREE.Clock();
     this.mouse = new THREE.Vector2(.5, .5);
     this.mouseSmooth = new THREE.Vector2(.5, .5);
-    this.layout = { shift: 0, shiftTarget: 0, dist: 11, distTarget: 11, auth: 0, authTarget: 0 };
+    this.layout = { shift: 0, shiftTarget: 0, dist: 11, distTarget: 11, auth: 0, authTarget: 0, vy: 0, vyTarget: 0 };
     this.arcs = [];
     this.rings = [];
     this.timers = [];
@@ -502,17 +502,19 @@ export class ThreatScene {
   _initInteraction() {
     let dragging = false, lx = 0, ly = 0, lastT = 0;
     this.idle = 0;
-    const el = this.canvas;
+    const BLOCK = 'a,button,input,select,textarea,label,.panel,.card,.no-drag';
     const down = e => {
-      // faqat globus atrofida bosilsa aylantiramiz
+      // faqat sichqoncha bilan, bo'sh joyda va globus ustida bosilsa aylantiramiz
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      if (e.target.closest?.(BLOCK)) return;
       if (!this._hitGlobe(e.clientX, e.clientY)) return;
+      e.preventDefault();
       dragging = true; lx = e.clientX; ly = e.clientY; lastT = performance.now();
-      el.setPointerCapture?.(e.pointerId);
       document.body.classList.add('is-dragging');
     };
     const move = e => {
       this.mouse.set(e.clientX / innerWidth, 1 - e.clientY / innerHeight);
-      document.body.classList.toggle('over-globe', !dragging && this._hitGlobe(e.clientX, e.clientY));
+      document.body.classList.toggle('over-globe', !dragging && e.pointerType === 'mouse' && !e.target.closest?.(BLOCK) && this._hitGlobe(e.clientX, e.clientY));
       if (!dragging) return;
       const dx = e.clientX - lx, dy = e.clientY - ly;
       const now = performance.now(), dt = Math.max(now - lastT, 1);
@@ -523,7 +525,7 @@ export class ThreatScene {
       this.idle = 0;
     };
     const up = () => { dragging = false; document.body.classList.remove('is-dragging'); };
-    el.addEventListener('pointerdown', down);
+    addEventListener('pointerdown', down);
     addEventListener('pointermove', move, { passive: true });
     addEventListener('pointerup', up);
     addEventListener('pointercancel', up);
@@ -542,22 +544,21 @@ export class ThreatScene {
     const d = this.camera.position.z;
     return (1 / Math.tan(fov / 2) / Math.sqrt(d * d - 1)) * innerHeight / 2;
   }
-  _vshift() { return this.mobile ? .17 + .11 * this.layout.auth : 0; }
+  _vshift() { return this.layout.vy; }
 
-  /* ----- layout: home | auth ----- */
-  setMode(mode) {
+  /* ----- joylashuv: har bir bo'lim o'z "kadr"ini beradi -----
+     shift: gorizontal siljish (ekran eniga nisbatan), r/rw: radius (balandlik/en ulushi),
+     vy: vertikal siljish (+ yuqoriga), aux: fon rangi (0 ko'k → 1 binafsha) */
+  setPreset(p) {
+    this.preset = p;
     const w = innerWidth, h = innerHeight;
-    const mobile = this.mobile = w < 900;
-    const auth = mode === 'auth';
-    // kerakli ekran radiusi (px) -> kamera masofasi
-    const R = mobile
-      ? Math.min(auth ? w * .32 : w * .43, h * .3)
-      : (auth ? Math.min(h * .3, w * .165) : Math.min(h * .35, w * .23));
+    this.mobile = w < 900;
+    const R = Math.min(p.r * h, (p.rw ?? 9) * w);
     const tanA = (R / (h / 2)) * Math.tan(this.camera.fov * Math.PI / 360);
     this.layout.distTarget = Math.sqrt(1 + 1 / (tanA * tanA));
-    this.layout.shiftTarget = mobile ? 0 : (auth ? -.28 : .13);
-    this.layout.authTarget = auth ? 1 : 0;
-    this.mode = mode;
+    this.layout.shiftTarget = p.shift || 0;
+    this.layout.vyTarget = p.vy || 0;
+    this.layout.authTarget = p.aux || 0;
   }
 
   resize() {
@@ -569,7 +570,7 @@ export class ThreatScene {
     this.bgU.uRes.value.set(w * pr, h * pr);
     this.starU.uPx.value = pr;
     this.dotU.uPx.value = pr * Math.min(h / 900, 1.3);
-    if (this.mode) this.setMode(this.mode);
+    if (this.preset) this.setPreset(this.preset);
   }
 
   /* ----- hujumlar ----- */
@@ -701,6 +702,7 @@ export class ThreatScene {
     L.shift = lerp(L.shift, L.shiftTarget, k);
     L.dist = lerp(L.dist, L.distTarget, k);
     L.auth = lerp(L.auth, L.authTarget, k);
+    L.vy = lerp(L.vy, L.vyTarget, k);
 
     // kamera siljishi (globusni chap/o'ngga surish)
     const w = innerWidth, h = innerHeight;
