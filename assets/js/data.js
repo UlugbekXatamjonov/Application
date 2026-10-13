@@ -75,10 +75,10 @@ export const CONFIG = {
   phone: '+998 (__) ___-__-__',      // TODO: telefon raqam
   address: 'Manzil kiritilmagan',    // TODO: markaz manzili
   landmark: '',                      // TODO: mo'ljal
-  enrollEndpoint: '/api/enroll',
+  enrollEndpoint: '/api/enroll',   // Vercel funksiyasi -> Telegram bot (api/enroll.js)
   // Talabalar kabineti API si. Bo'sh bo'lsa — login sahifasi namoyish rejimida ishlaydi.
   loginEndpoint: '',
-  loginRedirect: '',   // Vercel funksiyasi -> Telegram bot (api/enroll.js)
+  loginRedirect: '',               // muvaffaqiyatli kirishdan keyin o'tiladigan sahifa
 };
 
 export const CATEGORIES = [
